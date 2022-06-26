@@ -10,6 +10,6 @@ def read_file(archivo):
 
 def save_file(lista_csv):
 
-    with open('Medicamentos.csv', 'w', newline = '\n') as Medicamentos:
+    with open('Medicamentos.csv', 'w', newline = '') as Medicamentos:
         writer = csv.writer(Medicamentos)
         writer.writerows([lista_csv])

@@ -36,6 +36,7 @@ def Ahumada(remedios,lista2):
                 lista2.append(descripcionElement.strip())
                 lista2.append("Ahumada")
                 lista2.append(precio[1:])
+                lista2.append("\n")
 
 
 

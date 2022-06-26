@@ -35,6 +35,7 @@ def Salcobrand(remedios,lista2):
                 lista2.append(descripcionElement)
                 lista2.append("Salcobrand")
                 lista2.append(precio[18:])
+                lista2.append("\n")
 
 
             except Exception as e:
