@@ -33,6 +33,7 @@ def Ahumada(remedios,lista2):
                 descripcionElement = job.find("a", class_="product-item-link").get_text()
                 precio = job.find("span", class_="price").get_text()
 
+                lista2.append(i)
                 lista2.append(descripcionElement.strip())
                 lista2.append("Ahumada")
                 lista2.append(precio[1:])
