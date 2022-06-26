@@ -1,40 +1,46 @@
 import requests
 from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 
-def has_data_search(tag):
-    return tag.has_attr("data-container")
+chrome_options = Options()
+chrome_options.add_argument('--no-sandbox')
+chrome_options.add_argument('--disable-dev-shm-usage')
+driver = webdriver.Chrome(options=chrome_options)
 
 
-def Ahumada(principio_activo):
+def extraer(url):
+    driver.get(url)
+    page = driver.page_source
+    soup = BeautifulSoup(page, 'lxml')
+    return soup
 
-    url = f"https://www.farmaciasahumada.cl/catalogsearch/result/index/?p=1&q={principio_activo}"
 
-    page = requests.get(url)
-    soup = BeautifulSoup(page.content, "html.parser")
-    print(soup)
-    results = soup.find_all(has_data_search)
+def Ahumada(remedios,lista2):
 
-    while(True):
 
-        for job in results:
+    for i in remedios:
+
+        url = f"https://www.farmaciasahumada.cl/catalogsearch/result/?q={i}"
+
+        soup = extraer(url)
+        lista = soup.find_all('ol', class_='products list items product-items')
+
+        for job in lista:
             try:
-                titleElement = job.find("p", class_="product-brand-name").get_text()
+                print(f"Principio activo:{i}")
+
                 descripcionElement = job.find("a", class_="product-item-link").get_text()
                 precio = job.find("span", class_="price").get_text()
-                link = job.find("a", class_="product-item-link")["href"]
 
-                job = "NOMBRE: {}\nDESCRIPCION: {}\nPRECIO: {}\nLink: {}\n"
+                lista2.append(descripcionElement.strip())
+                lista2.append("Ahumada")
+                lista2.append(precio[1:])
 
-                job = job.format(titleElement, descripcionElement, precio, link)
 
-                print(job)
+
             except Exception as e:
                 print("Exception: {}".format(e))
                 pass
 
-        try:
-            sgt = soup.find("a", class_="action next")["href"]
-            url = sgt
-        except:
-            break
-    return
+    return lista2

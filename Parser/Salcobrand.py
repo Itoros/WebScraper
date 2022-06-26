@@ -3,6 +3,8 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
+from DataManager import save_file
+
 chrome_options = Options()
 chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument('--disable-dev-shm-usage')
@@ -16,23 +18,28 @@ def extraer(url):
     soup = BeautifulSoup(page, 'lxml')
     return soup
 
-def Salcobrand(activo):
-    url = f'https://salcobrand.cl/search_result?query={activo}'
-    soup = extraer(url)
-    lista = soup.find_all('div', class_='product clickable')
+def Salcobrand(remedios,lista2):
 
-    for job in lista:
-        try:
+    for i in remedios:
 
-            descripcionElement = job.find("span", class_="product-info truncate").get_text()
-            precio = job.find("span", class_="price selling").get_text()
-            link = job.find("a")["href"]
+        url = f'https://salcobrand.cl/search_result?query={i}'
+        soup = extraer(url)
+        lista = soup.find_all('div', class_='product clickable')
 
-            job = "DESCRIPCION: {}\nPRECIO: {}\nLink: https://salcobrand.cl/{}\n"
+        for job in lista:
+            try:
+                print(f"Principio activo:{i}")
+                descripcionElement = job.find("span", class_="product-info truncate").get_text()
+                precio = job.find("span", class_="price selling").get_text()
 
-            job = job.format(descripcionElement, precio, link)
+                lista2.append(descripcionElement)
+                lista2.append("Salcobrand")
+                lista2.append(precio[18:])
 
-            print(job)
-        except Exception as e:
-            print("Exception: {}".format(e))
-            pass
+
+            except Exception as e:
+                print("Exception: {}".format(e))
+                pass
+
+    return lista2
+
